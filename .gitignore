@@ -1,9 +1,11 @@
+.idea
 *.class
 target
 /bin/
 /.settings/
 .project
 .classpath
+*.iml
 
 # Package Files
 *.jar
