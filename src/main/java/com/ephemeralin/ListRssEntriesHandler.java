@@ -3,6 +3,7 @@ package com.ephemeralin;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.ephemeralin.dal.RssEntry;
+import com.ephemeralin.dal.RssEntryDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,7 +19,7 @@ public class ListRssEntriesHandler implements RequestHandler<Map<String, Object>
 	public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
 		try {
 //			 get all entries
-			List<RssEntry> products = new RssEntry().list();
+			List<RssEntry> products = new RssEntryDAO().list();
 
 			log.info("test OK");
 
