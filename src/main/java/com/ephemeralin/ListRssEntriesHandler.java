@@ -14,12 +14,17 @@ import java.util.Map;
 public class ListRssEntriesHandler implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
 
 	private final Logger log = LogManager.getLogger(this.getClass());
+	private RssEntryDAO rssEntryDAO;
+
+	public ListRssEntriesHandler() {
+		this.rssEntryDAO = RssEntryDAO.getInstance();
+	}
 
 	@Override
 	public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
 		try {
 //			 get all entries
-			List<RssEntry> products = new RssEntryDAO().list();
+			List<RssEntry> products = rssEntryDAO.list();
 
 			log.info("test OK");
 

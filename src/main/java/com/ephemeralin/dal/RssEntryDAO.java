@@ -17,13 +17,19 @@ public class RssEntryDAO {
     private final DynamoDBAdapter db_adapter;
     private final AmazonDynamoDB client;
 
-    public RssEntryDAO() {
+    private static final RssEntryDAO instance = new RssEntryDAO();
+
+    private RssEntryDAO() {
         DynamoDBMapperConfig mapperConfig = DynamoDBMapperConfig.builder()
                 .withTableNameOverride(new DynamoDBMapperConfig.TableNameOverride(RSS_ENTRIES_TABLE_NAME))
                 .build();
         this.db_adapter = DynamoDBAdapter.getInstance();
         this.client = this.db_adapter.getDbClient();
         this.mapper = this.db_adapter.createDbMapper(mapperConfig);
+    }
+
+    public static RssEntryDAO getInstance() {
+        return instance;
     }
 
     public List<RssEntry> list() {
