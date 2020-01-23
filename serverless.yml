@@ -29,7 +29,7 @@ package:
 
 functions:
   listRssEntries:
-    handler: com.ephemeralin.ListRssEntriesHandler
+    handler: com.ephemeralin.api.ListRssEntriesHandler
     events:
       - http:
           path: /entries

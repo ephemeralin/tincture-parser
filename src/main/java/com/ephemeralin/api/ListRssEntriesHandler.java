@@ -1,9 +1,9 @@
-package com.ephemeralin;
+package com.ephemeralin.api;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.ephemeralin.dal.RssEntry;
-import com.ephemeralin.dal.RssEntryDAO;
+import com.ephemeralin.dao.RssEntry;
+import com.ephemeralin.dao.RssEntryDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

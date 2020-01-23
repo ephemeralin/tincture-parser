@@ -1,4 +1,4 @@
-package com.ephemeralin;
+package com.ephemeralin.api;
 
 import java.util.Map;
 
