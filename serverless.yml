@@ -28,6 +28,10 @@ package:
   artifact: 'target/${self:service}-${self:provider.stage}.jar'
 
 functions:
+  feedRetriever:
+    handler: com.ephemeralin.crawl.FeedRetriever
+    events:
+      - schedule: rate(1 minute)
   listRssEntries:
     handler: com.ephemeralin.api.ListRssEntriesHandler
     events:
