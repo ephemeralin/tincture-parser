@@ -1,4 +1,4 @@
-package com.ephemeralin.dao;
+package com.ephemeralin.util;
 
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
