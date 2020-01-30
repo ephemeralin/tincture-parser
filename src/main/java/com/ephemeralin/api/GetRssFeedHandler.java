@@ -7,7 +7,7 @@ import com.ephemeralin.data.RssFeed;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class GetRssFeedHandler implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
@@ -21,6 +21,9 @@ public class GetRssFeedHandler implements RequestHandler<Map<String, Object>, Ap
 
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("X-Powered-By", "AWS Lambda & Serverless");
+        headers.put("Access-Control-Allow-Origin", "*");
         try {
             Map<String, String> pathParameters = (Map<String, String>) input.get("pathParameters");
             String feedName = pathParameters.get("feedName");
@@ -28,7 +31,7 @@ public class GetRssFeedHandler implements RequestHandler<Map<String, Object>, Ap
             return ApiGatewayResponse.builder()
                     .setStatusCode(200)
                     .setObjectBody(rssFeed)
-                    .setHeaders(Collections.singletonMap("X-Powered-By", "AWS Lambda & Serverless"))
+                    .setHeaders(headers)
                     .build();
         } catch (Exception ex) {
             log.error("Error in retrieving RSS Feed: " + ex);
@@ -36,7 +39,7 @@ public class GetRssFeedHandler implements RequestHandler<Map<String, Object>, Ap
             return ApiGatewayResponse.builder()
                     .setStatusCode(500)
                     .setObjectBody(responseBody)
-                    .setHeaders(Collections.singletonMap("X-Powered-By", "AWS Lambda & Serverless"))
+                    .setHeaders(headers)
                     .build();
         }
     }

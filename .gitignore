@@ -12,5 +12,6 @@ target
 *.war
 *.ear
 
-# Serverless directories
+# Serverless
 .serverless
+serverless.yml
