@@ -24,6 +24,7 @@ public class GetRssFeedHandler implements RequestHandler<Map<String, Object>, Ap
         HashMap<String, String> headers = new HashMap<>();
         headers.put("X-Powered-By", "AWS Lambda & Serverless");
         headers.put("Access-Control-Allow-Origin", "*");
+        headers.put("Access-Control-Allow-Credentials", "true");
         try {
             Map<String, String> pathParameters = (Map<String, String>) input.get("pathParameters");
             String feedName = pathParameters.get("feedName");

@@ -3,6 +3,9 @@ package com.ephemeralin.dao;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.*;
+import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
+import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.ephemeralin.data.RssFeed;
 import com.ephemeralin.util.DynamoDBAdapter;
@@ -61,8 +64,23 @@ public class RssFeedDAO {
         return rssFeed;
     }
 
+    public RssFeed getByFeedNamesList(List<String> feedNames) {
+        RssFeed rssFeed = null;
+        Table table = dynamoDB.getTable(RSS_FEEDS_TABLE_NAME);
+        QuerySpec spec = new QuerySpec()
+                .withFilterExpression("feedName in :(feedNamesList)")
+                .withValueMap(new ValueMap()
+                        .withList(":feedNamesList", feedNames))
+                .withConsistentRead(true);
+        ItemCollection<QueryOutcome> items = table.query(spec);
+        for (Item item : items) {
+            System.out.println("----------");
+            System.out.println(item.toJSONPretty());
+        }
+        return null;
+    }
+
     public void save(RssFeed rssEntry) {
-        log.info("RSS Feeds - save(): " + rssEntry.toString());
         this.mapper.save(rssEntry);
     }
 

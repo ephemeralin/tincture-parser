@@ -32,7 +32,7 @@ public class RssFeed {
     public String toString() {
         return "RssFeed{" +
                 "name='" + feedName + '\'' +
-                ", entries=" + entries +
+                ", entries n.=" + entries.size() +
                 '}';
     }
 }

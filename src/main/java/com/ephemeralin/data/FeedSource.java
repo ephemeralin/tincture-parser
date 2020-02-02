@@ -1,5 +1,6 @@
 package com.ephemeralin.data;
 
 public enum FeedSource {
-    HABR
+    habr, tproger, devby, dou, techrocks,
+    vc, ixbt, droider, wylsacom, thebell, xakep, rozetked, mobilereview, opennet, news3d_soft, news3d, popmech, gagadget, thecode
 }
