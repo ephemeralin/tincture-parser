@@ -11,7 +11,9 @@ target
 *.jar
 *.war
 *.ear
+package-lock.json
 
 # Serverless
 .serverless
 serverless.yml
+node_modules
