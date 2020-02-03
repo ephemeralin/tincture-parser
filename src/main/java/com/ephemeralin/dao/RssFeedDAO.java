@@ -3,15 +3,14 @@ package com.ephemeralin.dao;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.*;
-import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
-import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.ephemeralin.data.FeedArea;
 import com.ephemeralin.data.RssFeed;
 import com.ephemeralin.util.DynamoDBAdapter;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class RssFeedDAO {
@@ -64,23 +63,16 @@ public class RssFeedDAO {
         return rssFeed;
     }
 
-    public RssFeed getByFeedNamesList(List<String> feedNames) {
-        RssFeed rssFeed = null;
-        Table table = dynamoDB.getTable(RSS_FEEDS_TABLE_NAME);
-        QuerySpec spec = new QuerySpec()
-                .withFilterExpression("feedName in :(feedNamesList)")
-                .withValueMap(new ValueMap()
-                        .withList(":feedNamesList", feedNames))
-                .withConsistentRead(true);
-        ItemCollection<QueryOutcome> items = table.query(spec);
-        for (Item item : items) {
-            System.out.println("----------");
-            System.out.println(item.toJSONPretty());
-        }
-        return null;
+    public List<RssFeed> searchByFeedArea(FeedArea feedArea) {
+        Map<String, AttributeValue> eav = new HashMap<>();
+        eav.put(":val1", new AttributeValue().withS(feedArea.name()));
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
+                .withFilterExpression("feedArea = :val1").withExpressionAttributeValues(eav);
+        return this.mapper.scan(RssFeed.class, scanExpression);
     }
 
     public void save(RssFeed rssEntry) {
+        log.info("RSS Feed - save(): " + rssEntry.toString());
         this.mapper.save(rssEntry);
     }
 

@@ -3,6 +3,7 @@ package com.ephemeralin.api;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.ephemeralin.dao.RssFeedDAO;
+import com.ephemeralin.data.FeedArea;
 import com.ephemeralin.data.FeedSource;
 import com.ephemeralin.data.RssEntry;
 import com.ephemeralin.data.RssFeed;
@@ -24,37 +25,66 @@ public class AllFeedsExtractor implements RequestStreamHandler {
     private final Logger log = Logger.getLogger(String.valueOf(this.getClass()));
 
     private RssFeedDAO rssFeedDAO;
-    private Properties properties;
+    private Properties feedSourcesProps;
+    private Properties feedInfoProps;
 
     public AllFeedsExtractor() {
         this.rssFeedDAO = RssFeedDAO.getInstance();
         try (InputStream input = this.getClass().getClassLoader().getResourceAsStream("feedsources.properties")) {
             if (input == null) {
-                log.warning("Unable to find config.properties");
+                log.warning("Unable to find feedsources.properties");
             }
-            properties = new Properties();
-            properties.load(input);
+            feedSourcesProps = new Properties();
+            feedSourcesProps.load(input);
         } catch (IOException ex) {
-            log.warning("Could not load Properties");
+            log.warning("Could not load feedsources.properties");
+        }
+        try (InputStream input = this.getClass().getClassLoader().getResourceAsStream("feedinfo.properties")) {
+            if (input == null) {
+                log.warning("Unable to find feedinfo.properties");
+            }
+            feedInfoProps = new Properties();
+            feedInfoProps.load(input);
+        } catch (IOException ex) {
+            log.warning("Could not load feedinfo.properties");
         }
     }
 
     private void downloadRssFeeds() {
-        if (properties != null) {
-            properties.forEach((key, value) -> {
+        if (feedSourcesProps != null) {
+            feedSourcesProps.forEach((key, value) -> {
                 log.info("process " + key + " = " + value);
-                FeedSource feedSource = FeedSource.valueOf(key.toString());
-                String feedHost = value.toString();
                 try {
+                    FeedSource feedSource = FeedSource.valueOf(key.toString());
+                    String feedHost = value.toString();
                     URL feedUrl = new URL(feedHost);
+                    String feedInfo = feedInfoProps.getProperty(key.toString());
+
+                    FeedArea feedArea = null;
+                    String feedPrettyName = "";
+                    String feedHostUrl = "";
+                    int feedOrder = 0;
+                    if (feedInfo != null) {
+                        String[] values = feedInfo.split(",");
+                        feedArea = FeedArea.valueOf(values[0]);
+                        feedOrder = Integer.parseInt(values[1]);
+                        feedPrettyName = values[2];
+                        feedHostUrl = values[3];
+                    }
+
                     SyndFeedInput input = new SyndFeedInput();
                     SyndFeed feed = input.build(new XmlReader(feedUrl));
                     List<RssEntry> rssEntries = feed.getEntries().stream().map(e ->
                             new RssEntry(e.getTitle(), e.getDescription().getValue(), e.getLink(), feedSource))
                             .collect(Collectors.toList());
+
                     RssFeed rssFeed = new RssFeed();
                     rssFeed.setFeedName(feedSource.name());
+                    rssFeed.setFeedArea(feedArea);
+                    rssFeed.setFeedPrettyName(feedPrettyName);
+                    rssFeed.setFeedHostUrl(feedHostUrl);
                     rssFeed.setEntries(rssEntries);
+                    rssFeed.setFeedOrder(feedOrder);
                     rssFeedDAO.save(rssFeed);
                 } catch (Exception ex) {
                     ex.printStackTrace();

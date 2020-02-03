@@ -2,6 +2,7 @@ package com.ephemeralin.data;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConvertedEnum;
 
 import java.util.List;
 
@@ -9,6 +10,10 @@ import java.util.List;
 public class RssFeed {
 
     private String feedName;
+    private FeedArea feedArea;
+    private String feedPrettyName;
+    private String feedHostUrl;
+    private int feedOrder;
     private List<RssEntry> entries;
 
     @DynamoDBHashKey
@@ -20,6 +25,39 @@ public class RssFeed {
         this.feedName = feedName;
     }
 
+    @DynamoDBTypeConvertedEnum
+    public FeedArea getFeedArea() {
+        return feedArea;
+    }
+
+    public void setFeedArea(FeedArea feedArea) {
+        this.feedArea = feedArea;
+    }
+
+    public String getFeedPrettyName() {
+        return feedPrettyName;
+    }
+
+    public void setFeedPrettyName(String feedPrettyName) {
+        this.feedPrettyName = feedPrettyName;
+    }
+
+    public String getFeedHostUrl() {
+        return feedHostUrl;
+    }
+
+    public void setFeedHostUrl(String feedHostUrl) {
+        this.feedHostUrl = feedHostUrl;
+    }
+
+    public int getFeedOrder() {
+        return feedOrder;
+    }
+
+    public void setFeedOrder(int feedOrder) {
+        this.feedOrder = feedOrder;
+    }
+
     public List<RssEntry> getEntries() {
         return entries;
     }
@@ -28,10 +66,12 @@ public class RssFeed {
         this.entries = entries;
     }
 
+
     @Override
     public String toString() {
         return "RssFeed{" +
                 "name='" + feedName + '\'' +
+                "area ='" + feedArea + '\'' +
                 ", entries n.=" + entries.size() +
                 '}';
     }

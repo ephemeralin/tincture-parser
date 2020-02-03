@@ -25,7 +25,6 @@ public class RssEntry {
         this.feedSource = feedSource;
     }
 
-    //    @DynamoDBRangeKey(attributeName = "title")
     public String getTitle() {
         return this.title;
     }
@@ -34,7 +33,6 @@ public class RssEntry {
         this.title = title;
     }
 
-    //    @DynamoDBAttribute(attributeName="description")
     public String getDescription() {
         return this.description;
     }
@@ -43,8 +41,6 @@ public class RssEntry {
         this.description = description;
     }
 
-    //    @DynamoDBAttribute(attributeName="url")
-//    @DynamoDBHashKey(attributeName = "url")
     public String getUrl() {
         return url;
     }
@@ -53,7 +49,6 @@ public class RssEntry {
         this.url = url;
     }
 
-    //    @DynamoDBAttribute(attributeName="feed_source")
     @DynamoDBTypeConvertedEnum
     public FeedSource getFeedSource() {
         return this.feedSource;
