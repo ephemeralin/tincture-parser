@@ -3,7 +3,7 @@ package com.ephemeralin.api;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.ephemeralin.crawl.RssParser;
-import com.ephemeralin.crawl.SimpleRssParserFactory;
+import com.ephemeralin.crawl.RssParserSimpleFactory;
 import com.ephemeralin.dao.RssFeedDAO;
 import com.ephemeralin.data.FeedArea;
 import com.ephemeralin.data.FeedSource;
@@ -73,7 +73,7 @@ public class AllFeedsExtractor implements RequestStreamHandler {
                 rssFeed.setFeedHostUrl(feedHostUrl);
                 rssFeed.setFeedOrder(feedOrder);
 
-                RssParser parser = SimpleRssParserFactory.getParser(feedSource);
+                RssParser parser = RssParserSimpleFactory.getParser(feedSource);
                 List<RssEntry> rssEntries = parser.parse(rssFeedUrl);
 
                 rssFeed.setEntries(rssEntries);

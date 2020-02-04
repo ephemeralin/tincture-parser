@@ -2,7 +2,7 @@ package com.ephemeralin.crawl;
 
 import com.ephemeralin.data.FeedSource;
 
-public class SimpleRssParserFactory {
+public class RssParserSimpleFactory {
 
     public static RssParser getParser(FeedSource source) {
         RssParser parser = null;
