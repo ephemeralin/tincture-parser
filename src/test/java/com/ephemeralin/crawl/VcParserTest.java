@@ -9,17 +9,16 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class DevbyParserTest {
+class VcParserTest {
 
     @Test
-    @DisplayName("Dev.by parser test")
+    @DisplayName("Vc parser test")
     void parse() {
-        DevbyParser parser = new DevbyParser();
-        List<RssEntry> list = parser.parse("https://dev.by/rss");
+        VcParser parser = new VcParser();
+        List<RssEntry> list = parser.parse("https://vc.ru/rss/all/");
         assertNotNull(list);
+        assertTrue(list.size() != 0, "List must not be empty");
         assertTrue(list.size() > 9);
         System.out.println(list.get(0).toString());
-//        assertEquals(30, list.size(), "List size should equal 2");
-
     }
 }

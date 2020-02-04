@@ -18,8 +18,6 @@ class GenericParserTest {
         List<RssEntry> list = parser.parse("https://habr.com/ru/rss/best/daily/");
         assertNotNull(list);
         assertTrue(list.size() > 9);
-//        assertEquals(30, list.size(), "List size should equal 2");
-
     }
 
     @Test
@@ -30,7 +28,15 @@ class GenericParserTest {
         assertNotNull(list);
         assertTrue(list.size() > 9);
         System.out.println(list.get(0).toString());
-//        assertEquals(30, list.size(), "List size should equal 2");
-
     }
+
+//    @Test
+//    @DisplayName("Vc parser test")
+//    void parseVc() {
+//        GenericParser parser = new GenericParser();
+//        List<RssEntry> list = parser.parse("https://vc.ru/rss/all/");
+//        assertNotNull(list);
+//        assertTrue(list.size() > 9);
+//        System.out.println(list.get(0).toString());
+//    }
 }

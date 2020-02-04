@@ -10,6 +10,9 @@ public class SimpleRssParserFactory {
             case devby:
                 parser = new DevbyParser();
                 break;
+            case vc:
+                parser = new VcParser();
+                break;
             default:
                 parser = new GenericParser();
                 break;
