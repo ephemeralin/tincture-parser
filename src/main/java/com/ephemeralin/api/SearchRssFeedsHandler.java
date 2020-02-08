@@ -25,6 +25,8 @@ public class SearchRssFeedsHandler implements RequestHandler<Map<String, Object>
 
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
+        log.info("start Handle request");
+        log.info("input: " + input);
         HashMap<String, String> headers = new HashMap<>();
         headers.put("X-Powered-By", "AWS Lambda & Serverless");
         headers.put("Access-Control-Allow-Origin", "*");
@@ -33,8 +35,11 @@ public class SearchRssFeedsHandler implements RequestHandler<Map<String, Object>
             Map<String, String> queryStringParameters = (Map<String, String>) input.get("queryStringParameters");
             FeedArea feedArea = FeedArea.valueOf(queryStringParameters.get("feedArea").toString());
             log.info("feed area object: " + feedArea.toString());
+            log.info("get ready to run: rssFeedDAO.searchByFeedArea(feedArea)");
             List<RssFeed> rssFeeds = rssFeedDAO.searchByFeedArea(feedArea);
+            log.info("done: rssFeedDAO.searchByFeedArea(feedArea)");
             List<RssFeed> sortedRssFeeds = rssFeeds.stream().sorted(Comparator.comparingInt(RssFeed::getFeedOrder)).collect(Collectors.toList());
+            log.info("feeds sorted");
             log.info("feeds:");
             log.info(sortedRssFeeds);
             return ApiGatewayResponse.builder()

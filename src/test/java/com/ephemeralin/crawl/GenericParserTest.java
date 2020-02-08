@@ -30,13 +30,5 @@ class GenericParserTest {
         System.out.println(list.get(0).toString());
     }
 
-//    @Test
-//    @DisplayName("Vc parser test")
-//    void parseVc() {
-//        GenericParser parser = new GenericParser();
-//        List<RssEntry> list = parser.parse("https://vc.ru/rss/all/");
-//        assertNotNull(list);
-//        assertTrue(list.size() > 9);
-//        System.out.println(list.get(0).toString());
-//    }
+
 }

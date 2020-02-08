@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class VcParser implements RssParser {
+public class JsoupParser implements RssParser {
 
     private final Logger log = Logger.getLogger(String.valueOf(this.getClass()));
 

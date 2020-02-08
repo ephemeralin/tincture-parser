@@ -24,6 +24,7 @@ public class RssFeedDAO {
     private final DynamoDB dynamoDB;
 
     private RssFeedDAO() {
+        log.info("RssFeedDAO constructor start");
         DynamoDBMapperConfig mapperConfig = DynamoDBMapperConfig.builder()
                 .withTableNameOverride(new DynamoDBMapperConfig.TableNameOverride(RSS_FEEDS_TABLE_NAME))
                 .build();
@@ -31,6 +32,7 @@ public class RssFeedDAO {
         this.client = this.db_adapter.getDbClient();
         this.mapper = this.db_adapter.createDbMapper(mapperConfig);
         this.dynamoDB = new DynamoDB(client);
+        log.info("RssFeedDAO constructor done");
     }
 
     public static RssFeedDAO getInstance() {
