@@ -20,13 +20,29 @@ public class SearchRssFeedsHandler implements RequestHandler<Map<String, Object>
     private RssFeedDAO rssFeedDAO;
 
     public SearchRssFeedsHandler() {
+        log.info("Start constructing SearchRssFeedsHandler");
         this.rssFeedDAO = RssFeedDAO.getInstance();
+        log.info("Done constructing SearchRssFeedsHandler");
     }
 
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
         log.info("start Handle request");
         log.info("input: " + input);
+
+        if (input.containsKey("source") && input.get("source").equals("serverless-plugin-warmup")) {
+            try {
+                RssFeed habr = rssFeedDAO.get("habr");
+            } catch (Exception ex) {
+                log.info("WarmUP - cannot get rss feed");
+            }
+            log.info("WarmUP - Search RSS Lambda is warm!");
+            return ApiGatewayResponse.builder()
+                    .setStatusCode(200)
+                    .setRawBody("WarmUp - Search RSS Lambda is warm!")
+                    .build();
+        }
+
         HashMap<String, String> headers = new HashMap<>();
         headers.put("X-Powered-By", "AWS Lambda & Serverless");
         headers.put("Access-Control-Allow-Origin", "*");

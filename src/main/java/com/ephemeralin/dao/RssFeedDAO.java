@@ -66,11 +66,16 @@ public class RssFeedDAO {
     }
 
     public List<RssFeed> searchByFeedArea(FeedArea feedArea) {
+        log.info("start searchByFeedArea");
         Map<String, AttributeValue> eav = new HashMap<>();
         eav.put(":val1", new AttributeValue().withS(feedArea.name()));
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
                 .withFilterExpression("feedArea = :val1").withExpressionAttributeValues(eav);
-        return this.mapper.scan(RssFeed.class, scanExpression);
+        log.info("scanExpression constructed");
+        PaginatedScanList<RssFeed> feeds = this.mapper.scan(RssFeed.class, scanExpression);
+        log.info("mapper scan done");
+        log.info("done searchByFeedArea");
+        return feeds;
     }
 
     public void save(RssFeed rssEntry) {
