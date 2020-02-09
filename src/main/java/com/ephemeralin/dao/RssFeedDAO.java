@@ -3,11 +3,15 @@ package com.ephemeralin.dao;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.*;
+import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
+import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.ephemeralin.data.FeedArea;
 import com.ephemeralin.data.RssFeed;
 import com.ephemeralin.util.DynamoDBAdapter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,12 +20,14 @@ import java.util.logging.Logger;
 public class RssFeedDAO {
 
     private static final String RSS_FEEDS_TABLE_NAME = System.getenv("RSS_FEEDS_TABLE_NAME");
+    private static final String RSS_FEEDS_TABLE_INDEX = System.getenv("RSS_FEEDS_TABLE_INDEX");
     private static final RssFeedDAO instance = new RssFeedDAO();
     private final Logger log = Logger.getLogger(String.valueOf(this.getClass()));
     private final DynamoDBMapper mapper;
     private final DynamoDBAdapter db_adapter;
     private final AmazonDynamoDB client;
     private final DynamoDB dynamoDB;
+    private final Table table;
 
     private RssFeedDAO() {
         log.info("RssFeedDAO constructor start");
@@ -32,6 +38,7 @@ public class RssFeedDAO {
         this.client = this.db_adapter.getDbClient();
         this.mapper = this.db_adapter.createDbMapper(mapperConfig);
         this.dynamoDB = new DynamoDB(client);
+        this.table = dynamoDB.getTable(RSS_FEEDS_TABLE_NAME);
         log.info("RssFeedDAO constructor done");
     }
 
@@ -66,7 +73,7 @@ public class RssFeedDAO {
     }
 
     public List<RssFeed> searchByFeedArea(FeedArea feedArea) {
-        log.info("start searchByFeedArea");
+        log.info("start searchByFeedArea " + feedArea.name());
         Map<String, AttributeValue> eav = new HashMap<>();
         eav.put(":val1", new AttributeValue().withS(feedArea.name()));
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
@@ -76,6 +83,24 @@ public class RssFeedDAO {
         log.info("mapper scan done");
         log.info("done searchByFeedArea");
         return feeds;
+    }
+
+    public List<Item> queryByFeedArea(FeedArea feedArea) {
+        log.info("start queryByFeedArea " + feedArea.name());
+        Index index = table.getIndex(RSS_FEEDS_TABLE_INDEX);
+        QuerySpec querySpec = new QuerySpec();
+        log.info("query run start");
+        querySpec.withKeyConditionExpression("feedArea = :v_area")
+                .withValueMap(new ValueMap().withString(":v_area", feedArea.name()));
+        log.info("query run start");
+        ItemCollection<QueryOutcome> items = index.query(querySpec);
+        log.info("query run done");
+        List<Item> resultList = new ArrayList<>();
+        for (Item item : items) {
+            resultList.add(item);
+        }
+        log.info("finish queryByFeedArea " + feedArea.name());
+        return resultList;
     }
 
     public void save(RssFeed rssEntry) {

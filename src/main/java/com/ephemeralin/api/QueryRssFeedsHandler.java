@@ -1,5 +1,6 @@
 package com.ephemeralin.api;
 
+import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.ephemeralin.dao.RssFeedDAO;
@@ -14,10 +15,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class SearchRssFeedsHandler implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
+public class QueryRssFeedsHandler implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
 
-    private final Logger log = LogManager.getLogger(this.getClass());
     private static RssFeedDAO rssFeedDAO = RssFeedDAO.getInstance();
+    private final Logger log = LogManager.getLogger(this.getClass());
 
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
@@ -35,9 +36,9 @@ public class SearchRssFeedsHandler implements RequestHandler<Map<String, Object>
             FeedArea feedArea = FeedArea.valueOf(queryStringParameters.get("feedArea").toString());
             log.info("feed area object: " + feedArea.toString());
             log.info("get ready to run: rssFeedDAO.searchByFeedArea(feedArea)");
-            List<RssFeed> rssFeeds = rssFeedDAO.searchByFeedArea(feedArea);
+            List<Item> rssFeeds = rssFeedDAO.queryByFeedArea(feedArea);
             log.info("done: rssFeedDAO.searchByFeedArea(feedArea)");
-            List<RssFeed> sortedRssFeeds = rssFeeds.stream().sorted(Comparator.comparingInt(RssFeed::getFeedOrder)).collect(Collectors.toList());
+            List<Item> sortedRssFeeds = rssFeeds.stream().sorted(Comparator.comparingInt(item -> item.getInt("feedOrder"))).collect(Collectors.toList());
             log.info("feeds sorted");
             log.info("feeds:");
             log.info(sortedRssFeeds);
