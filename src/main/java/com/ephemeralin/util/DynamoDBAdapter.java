@@ -19,16 +19,15 @@ public class DynamoDBAdapter {
     }
 
     public static DynamoDBAdapter getInstance() {
-        if (db_adapter == null)
+        if (db_adapter == null) {
             db_adapter = new DynamoDBAdapter();
-
+        }
         return db_adapter;
     }
 
     public DynamoDBMapper createDbMapper(DynamoDBMapperConfig mapperConfig) {
         if (this.client != null)
             mapper = new DynamoDBMapper(this.client, mapperConfig);
-
         return this.mapper;
     }
 

@@ -58,12 +58,7 @@ public class SearchRssFeedsHandler implements RequestHandler<Map<String, Object>
     }
 
     private ApiGatewayResponse handleWarmUpRequest() {
-        try {
-            RssFeed habr = rssFeedDAO.get("habr");
-        } catch (Exception ex) {
-            log.info("WarmUP - cannot get rss feed");
-        }
-        log.info("WarmUP - Search RSS Lambda is warm!");
+        rssFeedDAO.warmUp();
         return ApiGatewayResponse.builder()
                 .setStatusCode(200)
                 .setRawBody("WarmUp - Search RSS Lambda is warm!")

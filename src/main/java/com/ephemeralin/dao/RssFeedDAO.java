@@ -7,6 +7,9 @@ import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.DescribeEndpointsRequest;
+import com.amazonaws.services.dynamodbv2.model.DescribeEndpointsResult;
+import com.amazonaws.services.dynamodbv2.model.Endpoint;
 import com.ephemeralin.data.FeedArea;
 import com.ephemeralin.data.RssFeed;
 import com.ephemeralin.util.DynamoDBAdapter;
@@ -74,12 +77,14 @@ public class RssFeedDAO {
 
     public List<RssFeed> searchByFeedArea(FeedArea feedArea) {
         log.info("start searchByFeedArea " + feedArea.name());
+        int numberOfThreads = 4;
         Map<String, AttributeValue> eav = new HashMap<>();
         eav.put(":val1", new AttributeValue().withS(feedArea.name()));
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
                 .withFilterExpression("feedArea = :val1").withExpressionAttributeValues(eav);
         log.info("scanExpression constructed");
-        PaginatedScanList<RssFeed> feeds = this.mapper.scan(RssFeed.class, scanExpression);
+        List<RssFeed> feeds = this.mapper.parallelScan(RssFeed.class, scanExpression, numberOfThreads);
+//        List<Product> scanResult = mapper.parallelScan(Product.class, scanExpression, numberOfThreads);
         log.info("mapper scan done");
         log.info("done searchByFeedArea");
         return feeds;
@@ -121,5 +126,17 @@ public class RssFeedDAO {
         return deleted;
     }
 
+
+    public void warmUp() {
+        log.info("start Warming Up...");
+        DescribeEndpointsResult describeEndpointsResult = client.describeEndpoints(new DescribeEndpointsRequest());
+        List<Endpoint> endpoints = describeEndpointsResult.getEndpoints();
+        for (Endpoint endpoint : endpoints) {
+            log.info("endpoint: " + endpoint.getAddress());
+        }
+        RssFeed habr = get("habr");
+        log.info("get sample feed: " + habr);
+        log.info("...done Warming Up.");
+    }
 
 }

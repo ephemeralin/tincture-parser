@@ -13,6 +13,9 @@ import com.ephemeralin.data.RssFeed;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -73,9 +76,11 @@ public class AllFeedsExtractor implements RequestStreamHandler {
                 rssFeed.setFeedHostUrl(feedHostUrl);
                 rssFeed.setFeedOrder(feedOrder);
 
+                ZonedDateTime now = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("UTC"));
+                rssFeed.setFeedUpdated(now.format(DateTimeFormatter.ISO_ZONED_DATE_TIME));
+
                 RssParser parser = RssParserSimpleFactory.getParser(feedSource);
                 List<RssEntry> rssEntries = parser.parse(rssFeedUrl);
-
                 rssFeed.setEntries(rssEntries);
                 rssFeedDAO.save(rssFeed);
             });

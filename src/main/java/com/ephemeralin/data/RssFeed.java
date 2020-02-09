@@ -15,6 +15,7 @@ public class RssFeed {
     private String feedHostUrl;
     private int feedOrder;
     private List<RssEntry> entries;
+    private String feedUpdated;
 
     @DynamoDBHashKey
     public String getFeedName() {
@@ -66,11 +67,19 @@ public class RssFeed {
         this.entries = entries;
     }
 
+    public String getFeedUpdated() {
+        return feedUpdated;
+    }
+
+    public void setFeedUpdated(String feedUpdated) {
+        this.feedUpdated = feedUpdated;
+    }
 
     @Override
     public String toString() {
         return "RssFeed{" +
                 "name='" + feedName + '\'' +
+                "updated ='" + feedUpdated + '\'' +
                 "area ='" + feedArea + '\'' +
                 ", entries n.=" + entries.size() +
                 '}';
