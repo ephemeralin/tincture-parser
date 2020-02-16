@@ -1,6 +1,7 @@
 package com.ephemeralin.data;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConvertedEnum;
 
@@ -17,7 +18,7 @@ public class RssFeed {
     private List<RssEntry> entries;
     private String feedUpdated;
 
-    @DynamoDBHashKey
+    @DynamoDBRangeKey
     public String getFeedName() {
         return feedName;
     }
@@ -26,6 +27,7 @@ public class RssFeed {
         this.feedName = feedName;
     }
 
+    @DynamoDBHashKey
     @DynamoDBTypeConvertedEnum
     public FeedArea getFeedArea() {
         return feedArea;

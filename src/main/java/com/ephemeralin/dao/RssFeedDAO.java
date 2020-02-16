@@ -11,14 +11,13 @@ import com.amazonaws.services.dynamodbv2.model.DescribeEndpointsRequest;
 import com.amazonaws.services.dynamodbv2.model.DescribeEndpointsResult;
 import com.amazonaws.services.dynamodbv2.model.Endpoint;
 import com.ephemeralin.data.FeedArea;
+import com.ephemeralin.data.RssEntry;
 import com.ephemeralin.data.RssFeed;
 import com.ephemeralin.util.DynamoDBAdapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class RssFeedDAO {
 
@@ -90,27 +89,30 @@ public class RssFeedDAO {
         return feeds;
     }
 
-    public List<Item> queryByFeedArea(FeedArea feedArea) {
+    public List<RssFeed> queryByFeedArea(FeedArea feedArea) {
         log.info("start queryByFeedArea " + feedArea.name());
-        Index index = table.getIndex(RSS_FEEDS_TABLE_INDEX);
-        QuerySpec querySpec = new QuerySpec();
         log.info("query run start");
-        querySpec.withKeyConditionExpression("feedArea = :v_area")
+        QuerySpec querySpec = new QuerySpec()
+                .withKeyConditionExpression("feedArea = :v_area")
                 .withValueMap(new ValueMap().withString(":v_area", feedArea.name()));
         log.info("query run start");
-        ItemCollection<QueryOutcome> items = index.query(querySpec);
+        ItemCollection<QueryOutcome> items = table.query(querySpec);
         log.info("query run done");
-        List<Item> resultList = new ArrayList<>();
+        List<RssFeed> rssFeeds = new ArrayList<>();
         for (Item item : items) {
-            resultList.add(item);
+            RssFeed rssFeed = convertItemToRssFeed(item);
+            rssFeeds.add(rssFeed);
         }
+        log.info("demarshalled to RssFeeds list");
+        List<RssFeed> sortedRssFeeds = rssFeeds.stream().sorted(Comparator.comparingInt(RssFeed::getFeedOrder)).collect(Collectors.toList());
+        log.info("sorted RssFeeds list");
         log.info("finish queryByFeedArea " + feedArea.name());
-        return resultList;
+        return sortedRssFeeds;
     }
 
-    public void save(RssFeed rssEntry) {
-        log.info("RSS Feed - save(): " + rssEntry.toString());
-        this.mapper.save(rssEntry);
+    public void save(RssFeed rssFeed) {
+        log.info("RSS Feed - save(): " + rssFeed.toString());
+        this.mapper.save(rssFeed);
     }
 
     public boolean deleteByName(String name) {
@@ -126,7 +128,6 @@ public class RssFeedDAO {
         return deleted;
     }
 
-
     public void warmUp() {
         log.info("start Warming Up...");
         DescribeEndpointsResult describeEndpointsResult = client.describeEndpoints(new DescribeEndpointsRequest());
@@ -139,4 +140,24 @@ public class RssFeedDAO {
         log.info("...done Warming Up.");
     }
 
+    private RssFeed convertItemToRssFeed(Item item) {
+        RssFeed rssFeed = new RssFeed();
+        rssFeed.setFeedOrder(item.getInt("feedOrder"));
+        rssFeed.setFeedHostUrl(item.getString("feedHostUrl"));
+        rssFeed.setFeedPrettyName(item.getString("feedPrettyName"));
+        rssFeed.setFeedArea(FeedArea.valueOf(item.getString("feedArea")));
+        rssFeed.setFeedName(item.getString("feedName"));
+        rssFeed.setFeedUpdated(item.getString("feedUpdated"));
+        List<HashMap<String, String>> entries = item.getList("entries");
+        ArrayList<RssEntry> rssEntries = new ArrayList<>();
+        for (HashMap<String, String> entry : entries) {
+            RssEntry rssEntry = new RssEntry();
+            rssEntry.setDescription(entry.get("description"));
+            rssEntry.setTitle(entry.get("title"));
+            rssEntry.setUrl(entry.get("url"));
+            rssEntries.add(rssEntry);
+        }
+        rssFeed.setEntries(rssEntries);
+        return rssFeed;
+    }
 }
