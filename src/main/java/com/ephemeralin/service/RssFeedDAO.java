@@ -1,4 +1,4 @@
-package com.ephemeralin.dao;
+package com.ephemeralin.service;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
@@ -15,32 +15,34 @@ import com.ephemeralin.data.RssEntry;
 import com.ephemeralin.data.RssFeed;
 import com.ephemeralin.util.DynamoDBAdapter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class RssFeedDAO {
 
-    private static final String RSS_FEEDS_TABLE_NAME = System.getenv("RSS_FEEDS_TABLE_NAME");
-    private static final String RSS_FEEDS_TABLE_INDEX = System.getenv("RSS_FEEDS_TABLE_INDEX");
-    private static final RssFeedDAO instance = new RssFeedDAO();
-    private final Logger log = Logger.getLogger(String.valueOf(this.getClass()));
-    private final DynamoDBMapper mapper;
-    private final DynamoDBAdapter db_adapter;
-    private final AmazonDynamoDB client;
-    private final DynamoDB dynamoDB;
-    private final Table table;
+    public static final String RSS_FEEDS_TABLE_NAME = System.getenv("RSS_FEEDS_TABLE_NAME");
+    public static final RssFeedDAO instance = new RssFeedDAO();
+    private static final Logger log = Logger.getLogger(String.valueOf(RssFeedDAO.class));
+    private DynamoDBMapper dbMapper;
+    private DynamoDBAdapter dbAdapter;
+    private AmazonDynamoDB dbClient;
+    private DynamoDB dynamoDB;
+    private Table dbTable;
 
     private RssFeedDAO() {
         log.info("RssFeedDAO constructor start");
         DynamoDBMapperConfig mapperConfig = DynamoDBMapperConfig.builder()
                 .withTableNameOverride(new DynamoDBMapperConfig.TableNameOverride(RSS_FEEDS_TABLE_NAME))
                 .build();
-        this.db_adapter = DynamoDBAdapter.getInstance();
-        this.client = this.db_adapter.getDbClient();
-        this.mapper = this.db_adapter.createDbMapper(mapperConfig);
-        this.dynamoDB = new DynamoDB(client);
-        this.table = dynamoDB.getTable(RSS_FEEDS_TABLE_NAME);
+        this.dbAdapter = DynamoDBAdapter.getInstance();
+        this.dbClient = dbAdapter.getDbClient();
+        this.dbMapper = dbAdapter.createDbMapper(mapperConfig);
+        this.dynamoDB = new DynamoDB(dbClient);
+        this.dbTable = dynamoDB.getTable(RSS_FEEDS_TABLE_NAME);
         log.info("RssFeedDAO constructor done");
     }
 
@@ -50,10 +52,8 @@ public class RssFeedDAO {
 
     public List<RssFeed> list() {
         DynamoDBScanExpression scanExp = new DynamoDBScanExpression();
-        List<RssFeed> results = this.mapper.scan(RssFeed.class, scanExp);
-        for (RssFeed p : results) {
-            log.info("RSS Feed entries - list(): " + p.toString());
-        }
+        List<RssFeed> results = dbMapper.scan(RssFeed.class, scanExp);
+        log.info("RSS Feed entries - list() size: " + results.size());
         return results;
     }
 
@@ -64,7 +64,7 @@ public class RssFeedDAO {
         DynamoDBQueryExpression<RssFeed> queryExp = new DynamoDBQueryExpression<RssFeed>()
                 .withKeyConditionExpression("feedName = :v1")
                 .withExpressionAttributeValues(av);
-        PaginatedQueryList<RssFeed> result = this.mapper.query(RssFeed.class, queryExp);
+        PaginatedQueryList<RssFeed> result = dbMapper.query(RssFeed.class, queryExp);
         if (result.size() > 0) {
             rssFeed = result.get(0);
             log.info("RSS Feeds - get(): entry - " + rssFeed.toString());
@@ -74,21 +74,6 @@ public class RssFeedDAO {
         return rssFeed;
     }
 
-    public List<RssFeed> searchByFeedArea(FeedArea feedArea) {
-        log.info("start searchByFeedArea " + feedArea.name());
-        int numberOfThreads = 4;
-        Map<String, AttributeValue> eav = new HashMap<>();
-        eav.put(":val1", new AttributeValue().withS(feedArea.name()));
-        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
-                .withFilterExpression("feedArea = :val1").withExpressionAttributeValues(eav);
-        log.info("scanExpression constructed");
-        List<RssFeed> feeds = this.mapper.parallelScan(RssFeed.class, scanExpression, numberOfThreads);
-//        List<Product> scanResult = mapper.parallelScan(Product.class, scanExpression, numberOfThreads);
-        log.info("mapper scan done");
-        log.info("done searchByFeedArea");
-        return feeds;
-    }
-
     public List<RssFeed> queryByFeedArea(FeedArea feedArea) {
         log.info("start queryByFeedArea " + feedArea.name());
         log.info("query run start");
@@ -96,7 +81,7 @@ public class RssFeedDAO {
                 .withKeyConditionExpression("feedArea = :v_area")
                 .withValueMap(new ValueMap().withString(":v_area", feedArea.name()));
         log.info("query run start");
-        ItemCollection<QueryOutcome> items = table.query(querySpec);
+        ItemCollection<QueryOutcome> items = dbTable.query(querySpec);
         log.info("query run done");
         List<RssFeed> rssFeeds = new ArrayList<>();
         for (Item item : items) {
@@ -112,7 +97,7 @@ public class RssFeedDAO {
 
     public void save(RssFeed rssFeed) {
         log.info("RSS Feed - save(): " + rssFeed.toString());
-        this.mapper.save(rssFeed);
+        this.dbMapper.save(rssFeed);
     }
 
     public boolean deleteByName(String name) {
@@ -120,24 +105,12 @@ public class RssFeedDAO {
         Object rssFeed = get(name);
         if (rssFeed != null) {
             log.info("RSS Feeds - delete(): " + rssFeed.toString());
-            this.mapper.delete(rssFeed);
+            this.dbMapper.delete(rssFeed);
             deleted = true;
         } else {
             log.info("RSS Feeds - delete(): entry - does not exist.");
         }
         return deleted;
-    }
-
-    public void warmUp() {
-        log.info("start Warming Up...");
-        DescribeEndpointsResult describeEndpointsResult = client.describeEndpoints(new DescribeEndpointsRequest());
-        List<Endpoint> endpoints = describeEndpointsResult.getEndpoints();
-        for (Endpoint endpoint : endpoints) {
-            log.info("endpoint: " + endpoint.getAddress());
-        }
-        RssFeed habr = get("habr");
-        log.info("get sample feed: " + habr);
-        log.info("...done Warming Up.");
     }
 
     private RssFeed convertItemToRssFeed(Item item) {
@@ -159,5 +132,17 @@ public class RssFeedDAO {
         }
         rssFeed.setEntries(rssEntries);
         return rssFeed;
+    }
+
+    public void warmUp() {
+        log.info("start Warming Up...");
+        DescribeEndpointsResult describeEndpointsResult = dbClient.describeEndpoints(new DescribeEndpointsRequest());
+        List<Endpoint> endpoints = describeEndpointsResult.getEndpoints();
+        for (Endpoint endpoint : endpoints) {
+            log.info("endpoint: " + endpoint.getAddress());
+        }
+        RssFeed habr = get("habr");
+        log.info("get sample feed: " + habr);
+        log.info("...done Warming Up.");
     }
 }

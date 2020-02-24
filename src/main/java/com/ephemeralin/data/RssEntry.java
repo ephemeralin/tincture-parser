@@ -2,11 +2,13 @@ package com.ephemeralin.data;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
 
+import java.io.Serializable;
 import java.util.logging.Logger;
 
 @DynamoDBDocument
-public class RssEntry {
+public class RssEntry implements Serializable {
 
+    private static final long serialVersionUID = 101L;
     private static final Logger log = Logger.getLogger(RssEntry.class.getName());
 
     private String title;

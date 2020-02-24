@@ -1,5 +1,7 @@
 package com.ephemeralin.data;
 
-public enum FeedArea {
+import java.io.Serializable;
+
+public enum FeedArea implements Serializable {
     dev, tech
 }

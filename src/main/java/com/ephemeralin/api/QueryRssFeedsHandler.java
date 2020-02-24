@@ -2,9 +2,9 @@ package com.ephemeralin.api;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.ephemeralin.dao.RssFeedDAO;
 import com.ephemeralin.data.FeedArea;
 import com.ephemeralin.data.RssFeed;
+import com.ephemeralin.service.RssFeedDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,7 +19,7 @@ public class QueryRssFeedsHandler implements RequestHandler<Map<String, Object>,
 
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
-        log.info("start Handle request");
+        log.info("start Handle Query request");
         log.info("input: " + input);
         if (input.containsKey("source") && input.get("source").equals("serverless-plugin-warmup")) {
             return handleWarmUpRequest();

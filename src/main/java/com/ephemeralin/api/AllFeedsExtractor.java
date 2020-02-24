@@ -4,11 +4,11 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.ephemeralin.crawl.RssParser;
 import com.ephemeralin.crawl.RssParserSimpleFactory;
-import com.ephemeralin.dao.RssFeedDAO;
 import com.ephemeralin.data.FeedArea;
 import com.ephemeralin.data.FeedSource;
 import com.ephemeralin.data.RssEntry;
 import com.ephemeralin.data.RssFeed;
+import com.ephemeralin.service.RssFeedDAO;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -2,8 +2,8 @@ package com.ephemeralin.api;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.ephemeralin.dao.RssFeedDAO;
 import com.ephemeralin.data.RssFeed;
+import com.ephemeralin.service.RssFeedDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
