@@ -29,7 +29,8 @@ public class AllFeedsExtractor implements RequestStreamHandler {
     private Properties feedInfoProps;
 
     public AllFeedsExtractor() {
-        this.rssFeedDAO = RssFeedDAO.getInstance();
+        log.info("--- start creating FeedsExtractor");
+        this.rssFeedDAO = new RssFeedDAO();
         try (InputStream input = this.getClass().getClassLoader().getResourceAsStream("feedsources.properties")) {
             if (input == null) {
                 log.warning("Unable to find feedsources.properties");
@@ -48,6 +49,7 @@ public class AllFeedsExtractor implements RequestStreamHandler {
         } catch (IOException ex) {
             log.warning("Could not load feedinfo.properties");
         }
+        log.info("--- finish creating FeedsExtractor");
     }
 
     private void downloadRssFeeds() {

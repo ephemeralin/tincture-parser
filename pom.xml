@@ -3,10 +3,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ephemeralin</groupId>
-    <artifactId>tincture-api</artifactId>
+    <artifactId>tincture-parser</artifactId>
     <packaging>jar</packaging>
     <version>dev</version>
-    <name>tincture-api</name>
+    <name>tincture-parser</name>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
