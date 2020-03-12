@@ -19,7 +19,5 @@ class DevbyParserTest {
         assertNotNull(list);
         assertTrue(list.size() > 9);
         System.out.println(list.get(0).toString());
-//        assertEquals(30, list.size(), "List size should equal 2");
-
     }
 }

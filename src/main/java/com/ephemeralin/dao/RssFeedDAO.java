@@ -1,9 +1,7 @@
 package com.ephemeralin.dao;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
@@ -60,4 +58,32 @@ public class RssFeedDAO {
         this.mapper.save(rssFeed);
     }
 
+    public RssFeed get(FeedArea feedArea, String feedName) {
+        RssFeed rssFeed = null;
+        String feedAreaName = feedArea.name();
+        HashMap<String, AttributeValue> av = new HashMap<>();
+        av.put(":v1", new AttributeValue().withS(feedAreaName));
+        av.put(":v2", new AttributeValue().withS(feedName));
+        DynamoDBQueryExpression<RssFeed> queryExp = new DynamoDBQueryExpression<RssFeed>()
+                .withKeyConditionExpression("feedArea = :v1 and feedName = :v2")
+                .withExpressionAttributeValues(av);
+        PaginatedQueryList<RssFeed> result = mapper.query(RssFeed.class, queryExp);
+        if (result.size() > 0) {
+            rssFeed = result.get(0);
+            log.info("RSS Feeds - get(): entry - " + rssFeed.toString());
+        } else {
+            log.info("RSS Feeds - get(): entry - Not Found.");
+        }
+        return rssFeed;
+    }
+
+    public void saveIfAbsent(RssFeed rssFeed) {
+        RssFeed rssFeedExisted = get(rssFeed.getFeedArea(), rssFeed.getFeedName());
+        if (rssFeedExisted == null || rssFeedExisted.getFeedHash() != rssFeed.getFeedHash()) {
+            log.info("feed doesn't exist or hashes different. To be save...");
+            save(rssFeed);
+        } else {
+            log.info("feed exist and hashes are the same. Don't need to save...");
+        }
+    }
 }

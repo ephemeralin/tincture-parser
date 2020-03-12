@@ -2,6 +2,7 @@ package com.ephemeralin.data;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
 
+import java.util.Objects;
 import java.util.logging.Logger;
 
 @DynamoDBDocument
@@ -54,5 +55,20 @@ public class RssEntry {
                 "   description='" + description + '\'' + ", \n" +
                 "   url='" + url + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RssEntry entry = (RssEntry) o;
+        return getTitle().equals(entry.getTitle()) &&
+                getDescription().equals(entry.getDescription()) &&
+                getUrl().equals(entry.getUrl());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTitle(), getDescription(), getUrl());
     }
 }

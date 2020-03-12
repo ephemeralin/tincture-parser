@@ -17,6 +17,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -54,11 +55,20 @@ public class AllFeedsExtractor implements RequestStreamHandler {
 
     private void downloadRssFeeds() {
         if (feedSourcesProps != null) {
-            feedSourcesProps.forEach((key, value) -> {
+            for (Map.Entry<Object, Object> entry : feedSourcesProps.entrySet()) {
+                Object key = entry.getKey();
+                Object value = entry.getValue();
                 log.info("process " + key + " = " + value);
                 FeedSource feedSource = FeedSource.valueOf(key.toString());
                 String rssFeedUrl = value.toString();
                 String feedInfo = feedInfoProps.getProperty(key.toString());
+
+                RssParser parser = RssParserSimpleFactory.getParser(feedSource);
+                List<RssEntry> rssEntries = parser.parse(rssFeedUrl);
+                if (rssEntries.isEmpty()) {
+                    log.info("parsed rssEntries list is empty. Don't need to save");
+                    continue;
+                }
 
                 FeedArea feedArea = null;
                 String feedPrettyName = "";
@@ -71,6 +81,7 @@ public class AllFeedsExtractor implements RequestStreamHandler {
                     feedPrettyName = values[2];
                     feedHostUrl = values[3];
                 }
+
                 RssFeed rssFeed = new RssFeed();
                 rssFeed.setFeedName(feedSource.name());
                 rssFeed.setFeedArea(feedArea);
@@ -81,11 +92,11 @@ public class AllFeedsExtractor implements RequestStreamHandler {
                 ZonedDateTime now = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("UTC"));
                 rssFeed.setFeedUpdated(now.format(DateTimeFormatter.ISO_ZONED_DATE_TIME));
 
-                RssParser parser = RssParserSimpleFactory.getParser(feedSource);
-                List<RssEntry> rssEntries = parser.parse(rssFeedUrl);
                 rssFeed.setEntries(rssEntries);
-                rssFeedDAO.save(rssFeed);
-            });
+                rssFeed.setFeedHash(rssFeed.hashCode());
+
+                rssFeedDAO.saveIfAbsent(rssFeed);
+            }
         }
     }
 

@@ -6,6 +6,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConvertedEnum;
 
 import java.util.List;
+import java.util.Objects;
 
 @DynamoDBTable(tableName = "RSS_FEEDS_TABLE_NAME")
 public class RssFeed {
@@ -17,6 +18,7 @@ public class RssFeed {
     private int feedOrder;
     private List<RssEntry> entries;
     private String feedUpdated;
+    private int feedHash;
 
     @DynamoDBRangeKey
     public String getFeedName() {
@@ -77,13 +79,40 @@ public class RssFeed {
         this.feedUpdated = feedUpdated;
     }
 
+    public int getFeedHash() {
+        return feedHash;
+    }
+
+    public void setFeedHash(int feedHash) {
+        this.feedHash = feedHash;
+    }
+
     @Override
     public String toString() {
         return "RssFeed{" +
                 "name='" + feedName + '\'' +
                 "updated ='" + feedUpdated + '\'' +
                 "area ='" + feedArea + '\'' +
+                "hash ='" + feedHash + '\'' +
                 ", entries n.=" + entries.size() +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RssFeed rssFeed = (RssFeed) o;
+        return getFeedOrder() == rssFeed.getFeedOrder() &&
+                getFeedName().equals(rssFeed.getFeedName()) &&
+                getFeedArea() == rssFeed.getFeedArea() &&
+                getFeedPrettyName().equals(rssFeed.getFeedPrettyName()) &&
+                getFeedHostUrl().equals(rssFeed.getFeedHostUrl()) &&
+                Objects.equals(getEntries(), rssFeed.getEntries());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getFeedName(), getFeedArea(), getFeedPrettyName(), getFeedHostUrl(), getFeedOrder(), getEntries());
     }
 }
