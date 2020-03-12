@@ -63,12 +63,11 @@ public class RssEntry {
         if (o == null || getClass() != o.getClass()) return false;
         RssEntry entry = (RssEntry) o;
         return getTitle().equals(entry.getTitle()) &&
-                getDescription().equals(entry.getDescription()) &&
                 getUrl().equals(entry.getUrl());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTitle(), getDescription(), getUrl());
+        return Objects.hash(getTitle(), getUrl());
     }
 }
