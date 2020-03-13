@@ -30,5 +30,15 @@ class GenericParserTest {
         System.out.println(list.get(0).toString());
     }
 
+    @Test
+    @DisplayName("JUG.ru parser test")
+    void parseJugRu() {
+        GenericParser parser = new GenericParser();
+        List<RssEntry> list = parser.parse("https://jug.ru/feed/");
+        assertNotNull(list);
+        assertTrue(list.size() > 9);
+        System.out.println(list.get(0).toString());
+    }
+
 
 }
