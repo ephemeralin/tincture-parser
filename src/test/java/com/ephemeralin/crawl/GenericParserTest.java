@@ -41,7 +41,7 @@ class GenericParserTest {
     }
 
     @Test
-    @DisplayName("JUG.ru parser test")
+    @DisplayName("Meduza parser test")
     void parseMeduza() {
         GenericParser parser = new GenericParser();
         List<RssEntry> list = parser.parse("https://meduza.io/rss/all");
@@ -50,5 +50,24 @@ class GenericParserTest {
         System.out.println(list.get(0).toString());
     }
 
+    @Test
+    @DisplayName("Adme parser test")
+    void parseAdme() {
+        GenericParser parser = new GenericParser();
+        List<RssEntry> list = parser.parse("https://www.adme.ru/rss/");
+        assertNotNull(list);
+        assertTrue(list.size() > 9);
+        System.out.println(list.get(0).toString());
+    }
+
+    @Test
+    @DisplayName("Lenta parser test")
+    void parseLenta() {
+        GenericParser parser = new GenericParser();
+        List<RssEntry> list = parser.parse("https://lenta.ru/rss");
+        assertNotNull(list);
+        assertTrue(list.size() > 9);
+        System.out.println(list.get(0).toString());
+    }
 
 }
