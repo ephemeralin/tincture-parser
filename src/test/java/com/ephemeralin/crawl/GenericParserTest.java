@@ -70,4 +70,25 @@ class GenericParserTest {
         System.out.println(list.get(0).toString());
     }
 
+    @Test
+    @DisplayName("Kommersant parser test")
+    void parseKommersant() {
+        GenericParser parser = new GenericParser();
+        List<RssEntry> list = parser.parse("https://www.kommersant.ru/RSS/news.xml");
+        assertNotNull(list);
+        assertTrue(list.size() > 9);
+        System.out.println(list.get(0).toString());
+    }
+
+    @Test
+    @DisplayName("BBC Russia")
+    void parseBbcRussia() {
+        GenericParser parser = new GenericParser();
+        List<RssEntry> list = parser.parse("http://feeds.bbci.co.uk/russian/rss.xml");
+        assertNotNull(list);
+        assertTrue(list.size() > 9);
+        System.out.println(list.get(0).toString());
+    }
+
+
 }

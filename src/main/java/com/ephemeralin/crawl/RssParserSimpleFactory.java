@@ -11,6 +11,7 @@ public class RssParserSimpleFactory {
                 parser = new DevbyParser();
                 break;
             case vc:
+            case rbc:
                 parser = new JsoupParser();
                 break;
             default:

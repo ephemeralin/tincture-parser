@@ -7,5 +7,5 @@ public enum FeedSource {
     vc, ixbt, droider, wylsacom, thebell, xakep, rozetked, mobilereview, opennet, news3d_soft, news3d, popmech,
     gagadget, thecode,
     //life
-    meduza, adme, lenta
+    meduza, adme, lenta, kommersant, bbcru, rbc
 }

@@ -44,4 +44,15 @@ class JsoupParserTest {
         System.out.println(list.get(0).toString());
     }
 
+    @Test
+    @DisplayName("Rbc")
+    void parseRbc() {
+        JsoupParser parser = new JsoupParser();
+        List<RssEntry> list = parser.parse("http://static.feed.rbc.ru/rbc/logical/footer/news.rss");
+        assertNotNull(list);
+        assertTrue(list.size() != 0, "List must not be empty");
+        assertTrue(list.size() > 9);
+        System.out.println(list.get(0).toString());
+    }
+
 }
