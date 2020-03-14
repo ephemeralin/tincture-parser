@@ -22,7 +22,7 @@ public class GenericParser implements RssParser {
             URL feedUrl = new URL(url);
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(feedUrl));
-            rssEntries = feed.getEntries().stream().limit(10).map(e ->
+            rssEntries = feed.getEntries().stream().limit(20).map(e ->
                     new RssEntry(
                             e.getTitle(),
                             e.getDescription().getValue(),

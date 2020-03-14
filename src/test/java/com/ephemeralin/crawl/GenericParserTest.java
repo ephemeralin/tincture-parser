@@ -40,5 +40,15 @@ class GenericParserTest {
         System.out.println(list.get(0).toString());
     }
 
+    @Test
+    @DisplayName("JUG.ru parser test")
+    void parseMeduza() {
+        GenericParser parser = new GenericParser();
+        List<RssEntry> list = parser.parse("https://meduza.io/rss/all");
+        assertNotNull(list);
+        assertTrue(list.size() > 9);
+        System.out.println(list.get(0).toString());
+    }
+
 
 }
