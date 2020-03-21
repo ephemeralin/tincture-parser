@@ -10,10 +10,21 @@ public class RssParserSimpleFactory {
             case devby:
                 parser = new DevbyParser();
                 break;
+
+            case reddit_tech:
+            case reddit_prog:
+            case reddit_java:
+            case spring:
+                parser = new RedditParser();
+                break;
+
             case vc:
+            case devcom:
             case rbc:
+            case wash_post:
                 parser = new JsoupParser();
                 break;
+
             default:
                 parser = new GenericParser();
                 break;

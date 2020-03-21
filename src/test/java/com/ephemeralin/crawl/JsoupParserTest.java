@@ -1,6 +1,7 @@
 package com.ephemeralin.crawl;
 
 import com.ephemeralin.data.RssEntry;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Disabled
 class JsoupParserTest {
 
     @Test
@@ -49,6 +51,40 @@ class JsoupParserTest {
     void parseRbc() {
         JsoupParser parser = new JsoupParser();
         List<RssEntry> list = parser.parse("http://static.feed.rbc.ru/rbc/logical/footer/news.rss");
+        assertNotNull(list);
+        assertTrue(list.size() != 0, "List must not be empty");
+        assertTrue(list.size() > 9);
+        System.out.println(list.get(0).toString());
+    }
+
+    @Test
+    @DisplayName("Developer.com")
+    void parseDevcom() {
+        JsoupParser parser = new JsoupParser();
+        List<RssEntry> list = parser.parse("https://www.developer.com/developer/dev-25.xml");
+        assertNotNull(list);
+        assertTrue(list.size() != 0, "List must not be empty");
+        assertTrue(list.size() > 9);
+        System.out.println(list.get(0).toString());
+    }
+
+    @Test
+    @DisplayName("Techcrunch")
+    void parseTechcrunch() {
+        JsoupParser parser = new JsoupParser();
+        List<RssEntry> list = parser.parse("https://techcrunch.com/feed/");
+        assertNotNull(list);
+        assertTrue(list.size() != 0, "List must not be empty");
+        assertTrue(list.size() > 9);
+        System.out.println(list.get(0).toString());
+    }
+
+    @Test
+    @DisplayName("Any feed source")
+    void parseAny() {
+        JsoupParser parser = new JsoupParser();
+//        List<RssEntry> list = parser.parse("https://www.reddit.com/r/programming.rss");
+        List<RssEntry> list = parser.parse("https://www.reddit.com/r/GameDeals/new/.rss?sort=new");
         assertNotNull(list);
         assertTrue(list.size() != 0, "List must not be empty");
         assertTrue(list.size() > 9);

@@ -9,6 +9,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+//@Disabled
 class GenericParserTest {
 
     @Test
@@ -90,5 +91,64 @@ class GenericParserTest {
         System.out.println(list.get(0).toString());
     }
 
+    @Test
+    @DisplayName("Hacker News")
+    void parseHn() {
+        GenericParser parser = new GenericParser();
+        List<RssEntry> list = parser.parse("https://news.ycombinator.com/rss");
+        assertNotNull(list);
+        assertTrue(list.size() > 9);
+        System.out.println(list.get(0).toString());
+    }
+
+    @Test
+    @DisplayName("Techcrunch")
+    void parseTechcrunch() {
+        GenericParser parser = new GenericParser();
+        List<RssEntry> list = parser.parse("https://techcrunch.com/feed/");
+        assertNotNull(list);
+        assertTrue(list.size() > 9);
+        System.out.println(list.get(0).toString());
+    }
+
+    @Test
+    @DisplayName("JetBrains Blog")
+    void parseJetBrains() {
+        GenericParser parser = new GenericParser();
+        List<RssEntry> list = parser.parse("https://blog.jetbrains.com/feed/");
+        assertNotNull(list);
+        assertTrue(list.size() > 9);
+        System.out.println(list.get(0).toString());
+    }
+
+    @Test
+    @DisplayName("thedailywtf")
+    void parseDailywtf() {
+        GenericParser parser = new GenericParser();
+        List<RssEntry> list = parser.parse("http://syndication.thedailywtf.com/TheDailyWtf");
+        assertNotNull(list);
+        assertTrue(list.size() > 9);
+        System.out.println(list.get(0).toString());
+    }
+
+    @Test
+    @DisplayName("dev.to")
+    void parseDevTo() {
+        GenericParser parser = new GenericParser();
+        List<RssEntry> list = parser.parse("https://dev.to/rss");
+        assertNotNull(list);
+        assertTrue(list.size() > 9);
+        System.out.println(list.get(0).toString());
+    }
+
+    @Test
+    @DisplayName("any feed")
+    void parseAnyFeed() {
+        GenericParser parser = new GenericParser();
+        List<RssEntry> list = parser.parse("https://github.blog/all.atom");
+        assertNotNull(list);
+        assertTrue(list.size() > 9);
+        System.out.println(list.get(2).toString());
+    }
 
 }
