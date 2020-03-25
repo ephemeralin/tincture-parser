@@ -1,10 +1,9 @@
-package com.ephemeralin.crawl;
+package com.ephemeralin.parse;
 
 import com.ephemeralin.data.RssEntry;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
@@ -13,6 +12,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import static com.ephemeralin.parse.Constants.MAX_FEED_SIZE;
 
 public class DevbyParser implements RssParser {
 
@@ -24,14 +25,14 @@ public class DevbyParser implements RssParser {
         try {
             Document doc = Jsoup.parse(new URL(url).openStream(), "UTF-8", "", Parser.xmlParser());
             final Elements itemElements = doc.getElementsByTag("item");
-            for (Element itemElement : itemElements) {
+            itemElements.stream().limit(MAX_FEED_SIZE).forEach(item -> {
                 RssEntry entry = new RssEntry(
-                        removeCDATAtag(itemElement.getElementsByTag("title").text()),
-                        removeCDATAtag(itemElement.getElementsByTag("description").text()),
-                        itemElement.getElementsByTag("link").text()
+                        removeCDATAtag(item.getElementsByTag("title").text()),
+                        removeCDATAtag(item.getElementsByTag("description").text()),
+                        item.getElementsByTag("link").text()
                 );
                 rssEntries.add(entry);
-            }
+            });
         } catch (IOException ex) {
             ex.printStackTrace();
             log.warning("ERROR while parsing url: " + url);

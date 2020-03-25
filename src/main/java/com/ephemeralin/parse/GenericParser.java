@@ -1,4 +1,4 @@
-package com.ephemeralin.crawl;
+package com.ephemeralin.parse;
 
 import com.ephemeralin.data.RssEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static com.ephemeralin.parse.Constants.MAX_FEED_SIZE;
+
 public class GenericParser implements RssParser {
 
     private final Logger log = Logger.getLogger(String.valueOf(this.getClass()));
@@ -22,7 +24,7 @@ public class GenericParser implements RssParser {
             URL feedUrl = new URL(url);
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(feedUrl));
-            rssEntries = feed.getEntries().stream().limit(20).map(e ->
+            rssEntries = feed.getEntries().stream().limit(MAX_FEED_SIZE).map(e ->
                     new RssEntry(
                             e.getTitle(),
                             e.getDescription().getValue(),

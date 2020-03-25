@@ -1,4 +1,4 @@
-package com.ephemeralin.crawl;
+package com.ephemeralin.parse;
 
 import com.ephemeralin.data.RssEntry;
 import org.junit.jupiter.api.DisplayName;
@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.ephemeralin.parse.Constants.MAX_FEED_SIZE;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -17,7 +18,7 @@ class RedditParserTest {
         RedditParser parser = new RedditParser();
         List<RssEntry> list = parser.parse("https://www.reddit.com/r/programming/.rss?sort=hot");
         assertNotNull(list);
-        assertTrue(list.size() > 9);
+        assertTrue(list.size() > MAX_FEED_SIZE - 1);
         System.out.println(list.get(3).toString());
     }
 
@@ -27,7 +28,7 @@ class RedditParserTest {
         RedditParser parser = new RedditParser();
         List<RssEntry> list = parser.parse("https://www.reddit.com/r/technology/.rss?sort=hot");
         assertNotNull(list);
-        assertTrue(list.size() > 9);
+        assertTrue(list.size() > MAX_FEED_SIZE - 1);
         System.out.println(list.get(3).toString());
     }
 }

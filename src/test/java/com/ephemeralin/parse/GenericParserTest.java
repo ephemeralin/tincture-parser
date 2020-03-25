@@ -1,4 +1,4 @@
-package com.ephemeralin.crawl;
+package com.ephemeralin.parse;
 
 import com.ephemeralin.data.RssEntry;
 import org.junit.jupiter.api.DisplayName;
@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.ephemeralin.parse.Constants.MAX_FEED_SIZE;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-//@Disabled
 class GenericParserTest {
 
     @Test
@@ -18,7 +18,7 @@ class GenericParserTest {
         GenericParser parser = new GenericParser();
         List<RssEntry> list = parser.parse("https://habr.com/ru/rss/best/daily/");
         assertNotNull(list);
-        assertTrue(list.size() > 9);
+        assertTrue(list.size() > MAX_FEED_SIZE - 1);
     }
 
     @Test
@@ -27,7 +27,7 @@ class GenericParserTest {
         GenericParser parser = new GenericParser();
         List<RssEntry> list = parser.parse("https://wylsa.com/category/news/feed/");
         assertNotNull(list);
-        assertTrue(list.size() > 9);
+        assertTrue(list.size() > MAX_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
@@ -37,7 +37,7 @@ class GenericParserTest {
         GenericParser parser = new GenericParser();
         List<RssEntry> list = parser.parse("https://jug.ru/feed/");
         assertNotNull(list);
-        assertTrue(list.size() > 9);
+        assertTrue(list.size() > MAX_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
@@ -47,7 +47,7 @@ class GenericParserTest {
         GenericParser parser = new GenericParser();
         List<RssEntry> list = parser.parse("https://meduza.io/rss/all");
         assertNotNull(list);
-        assertTrue(list.size() > 9);
+        assertTrue(list.size() > MAX_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
@@ -57,7 +57,7 @@ class GenericParserTest {
         GenericParser parser = new GenericParser();
         List<RssEntry> list = parser.parse("https://www.adme.ru/rss/");
         assertNotNull(list);
-        assertTrue(list.size() > 9);
+        assertTrue(list.size() > MAX_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
@@ -67,7 +67,7 @@ class GenericParserTest {
         GenericParser parser = new GenericParser();
         List<RssEntry> list = parser.parse("https://lenta.ru/rss");
         assertNotNull(list);
-        assertTrue(list.size() > 9);
+        assertTrue(list.size() > MAX_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
@@ -77,7 +77,7 @@ class GenericParserTest {
         GenericParser parser = new GenericParser();
         List<RssEntry> list = parser.parse("https://www.kommersant.ru/RSS/news.xml");
         assertNotNull(list);
-        assertTrue(list.size() > 9);
+        assertTrue(list.size() > MAX_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
@@ -87,7 +87,7 @@ class GenericParserTest {
         GenericParser parser = new GenericParser();
         List<RssEntry> list = parser.parse("http://feeds.bbci.co.uk/russian/rss.xml");
         assertNotNull(list);
-        assertTrue(list.size() > 9);
+        assertTrue(list.size() > MAX_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
@@ -97,7 +97,7 @@ class GenericParserTest {
         GenericParser parser = new GenericParser();
         List<RssEntry> list = parser.parse("https://news.ycombinator.com/rss");
         assertNotNull(list);
-        assertTrue(list.size() > 9);
+        assertTrue(list.size() > MAX_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
@@ -107,7 +107,7 @@ class GenericParserTest {
         GenericParser parser = new GenericParser();
         List<RssEntry> list = parser.parse("https://techcrunch.com/feed/");
         assertNotNull(list);
-        assertTrue(list.size() > 9);
+        assertTrue(list.size() > MAX_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
@@ -117,7 +117,7 @@ class GenericParserTest {
         GenericParser parser = new GenericParser();
         List<RssEntry> list = parser.parse("https://blog.jetbrains.com/feed/");
         assertNotNull(list);
-        assertTrue(list.size() > 9);
+        assertTrue(list.size() > MAX_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
@@ -127,7 +127,7 @@ class GenericParserTest {
         GenericParser parser = new GenericParser();
         List<RssEntry> list = parser.parse("http://syndication.thedailywtf.com/TheDailyWtf");
         assertNotNull(list);
-        assertTrue(list.size() > 9);
+        assertTrue(list.size() > MAX_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
@@ -137,7 +137,7 @@ class GenericParserTest {
         GenericParser parser = new GenericParser();
         List<RssEntry> list = parser.parse("https://dev.to/rss");
         assertNotNull(list);
-        assertTrue(list.size() > 9);
+        assertTrue(list.size() > MAX_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
@@ -147,7 +147,7 @@ class GenericParserTest {
         GenericParser parser = new GenericParser();
         List<RssEntry> list = parser.parse("https://github.blog/all.atom");
         assertNotNull(list);
-        assertTrue(list.size() > 9);
+        assertTrue(list.size() > MAX_FEED_SIZE - 1);
         System.out.println(list.get(2).toString());
     }
 

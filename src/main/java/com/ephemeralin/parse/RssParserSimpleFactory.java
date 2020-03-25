@@ -1,4 +1,4 @@
-package com.ephemeralin.crawl;
+package com.ephemeralin.parse;
 
 import com.ephemeralin.data.FeedSource;
 
