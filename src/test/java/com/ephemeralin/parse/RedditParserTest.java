@@ -1,6 +1,7 @@
 package com.ephemeralin.parse;
 
 import com.ephemeralin.data.RssEntry;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +11,7 @@ import static com.ephemeralin.parse.Constants.MAX_FEED_SIZE;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Disabled
 class RedditParserTest {
 
     @Test
