@@ -79,7 +79,7 @@ public class RssFeedDAO {
 
     public void saveIfAbsent(RssFeed rssFeed) {
         RssFeed rssFeedExisted = get(rssFeed.getFeedArea(), rssFeed.getFeedName());
-        if (rssFeedExisted == null || rssFeedExisted.getFeedHash() != rssFeed.getFeedHash()) {
+        if (rssFeedExisted == null || !rssFeedExisted.equals(rssFeed)) {
             log.info("feed doesn't exist or hashes different. To be save...");
             save(rssFeed);
         } else {

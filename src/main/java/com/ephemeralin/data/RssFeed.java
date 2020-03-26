@@ -18,7 +18,6 @@ public class RssFeed {
     private int feedOrder;
     private List<RssEntry> entries;
     private String feedUpdated;
-    private int feedHash;
 
     @DynamoDBRangeKey
     public String getFeedName() {
@@ -79,21 +78,12 @@ public class RssFeed {
         this.feedUpdated = feedUpdated;
     }
 
-    public int getFeedHash() {
-        return feedHash;
-    }
-
-    public void setFeedHash(int feedHash) {
-        this.feedHash = feedHash;
-    }
-
     @Override
     public String toString() {
         return "RssFeed{" +
                 "name='" + feedName + '\'' +
                 "updated ='" + feedUpdated + '\'' +
                 "area ='" + feedArea + '\'' +
-                "hash ='" + feedHash + '\'' +
                 ", entries n.=" + entries.size() +
                 '}';
     }
