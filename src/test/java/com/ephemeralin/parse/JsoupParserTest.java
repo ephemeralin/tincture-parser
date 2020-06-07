@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static com.ephemeralin.parse.Constants.MAX_FEED_SIZE;
+import static com.ephemeralin.parse.Constants.MIN_FEED_SIZE;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -21,7 +21,7 @@ class JsoupParserTest {
         List<RssEntry> list = parser.parse("https://vc.ru/rss/all/");
         assertNotNull(list);
         assertTrue(list.size() != 0, "List must not be empty");
-        assertTrue(list.size() > MAX_FEED_SIZE - 1);
+        assertTrue(list.size() > MIN_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
@@ -32,7 +32,7 @@ class JsoupParserTest {
         List<RssEntry> list = parser.parse("https://www.popmech.ru/out/public-all.xml");
         assertNotNull(list);
         assertTrue(list.size() != 0, "List must not be empty");
-        assertTrue(list.size() > MAX_FEED_SIZE - 1);
+        assertTrue(list.size() > MIN_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
@@ -43,7 +43,7 @@ class JsoupParserTest {
         List<RssEntry> list = parser.parse("https://www.ixbt.com/export/news.rss");
         assertNotNull(list);
         assertTrue(list.size() != 0, "List must not be empty");
-        assertTrue(list.size() > MAX_FEED_SIZE - 1);
+        assertTrue(list.size() > MIN_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
@@ -54,7 +54,7 @@ class JsoupParserTest {
         List<RssEntry> list = parser.parse("http://static.feed.rbc.ru/rbc/logical/footer/news.rss");
         assertNotNull(list);
         assertTrue(list.size() != 0, "List must not be empty");
-        assertTrue(list.size() > MAX_FEED_SIZE - 1);
+        assertTrue(list.size() > MIN_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
@@ -65,7 +65,7 @@ class JsoupParserTest {
         List<RssEntry> list = parser.parse("https://www.developer.com/developer/dev-25.xml");
         assertNotNull(list);
         assertTrue(list.size() != 0, "List must not be empty");
-        assertTrue(list.size() > MAX_FEED_SIZE - 1);
+        assertTrue(list.size() > MIN_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
@@ -76,7 +76,7 @@ class JsoupParserTest {
         List<RssEntry> list = parser.parse("https://techcrunch.com/feed/");
         assertNotNull(list);
         assertTrue(list.size() != 0, "List must not be empty");
-        assertTrue(list.size() > MAX_FEED_SIZE - 1);
+        assertTrue(list.size() > MIN_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
@@ -89,7 +89,7 @@ class JsoupParserTest {
         List<RssEntry> list = parser.parse("https://www.reddit.com/r/GameDeals/new/.rss?sort=new");
         assertNotNull(list);
         assertTrue(list.size() != 0, "List must not be empty");
-        assertTrue(list.size() > MAX_FEED_SIZE - 1);
+        assertTrue(list.size() > MIN_FEED_SIZE - 1);
         System.out.println(list.get(0).toString());
     }
 
