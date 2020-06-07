@@ -14,5 +14,5 @@ public enum FeedSource {
     //life eng
     bbc, newyorker, wash_post, nytimes, economist,
     //java eng
-    javaworld, dzone_java, ibm_java, reddit_java, spring, jaxenter
+    javaworld, dzone_java, ibm_java, reddit_java, spring, jaxenter, inside_java
 }
